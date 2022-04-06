@@ -39,14 +39,75 @@ COMMIT;
 select * from ANIMALS;
 
 SELECT COUNT(*) FROM ANIMALS;
--- 9
+-- Return 9
 SELECT COUNT(*) FROM ANIMALS WHERE neutered = false;
--- 3
+-- Return 3
 SELECT COUNT(*) FROM ANIMALS WHERE escape_attempts = 0;
--- 2
+-- Return 2
 SELECT AVG(weight_kg) FROM ANIMALS;
--- 16.6488888888888889
+-- Return 16.6488888888888889
 SELECT neutered,SUM(escape_attempts) AS TOTAL_ESCAPE FROM ANIMALS GROUP BY neutered;;
 
 SELECT species, MIN(weight_kg), MAX(weight_kg) FROM animals GROUP BY species;
 SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth >= '01-01-1990' AND date_of_birth < '12-31-2000' GROUP BY species;
+
+-- What animals are included in the melody pool?
+SELECT A.name, O.full_name as owner FROM animals A join owners O on  A.owner_id = O.id WHERE O.full_name = 'Melody Pond';
+
+-- List of all animals that are Pokemon.
+SELECT A.name, S.name  as species FROM animals A join species S  on A.species_id = S.id WHERE S.name = 'Pokemon' ;
+
+-- List all the owners and their pets, be sure to include those who don't have any pets.
+SELECT O.full_name as owner_name, A.name as animal_name FROM owners O left join animals A on O.id= A.owner_id;
+
+-- How many animals are there in each round?
+SELECT count(*), S.name FROM animals A join species S on A.species_id = S.id group by S.name;
+
+-- List all the Digimon that belong to Jennifer Orwell.
+SELECT A.name as animal_name, S.name as species_name, O.full_name as owner_name
+FROM animals A join species S on A.species_id = S.id join owners O on A.owner_id = O.id
+WHERE S.name = 'Digimon' and O.full_name = 'Jennifer Orwell';
+
+-- List all the animals that belong to Dean Winchester and did not try to escape.
+SELECT A.name as animal_name, A.escape_attempts, O.full_name as owner_name
+FROM animals A join owners O on A.owner_id = O.id
+WHERE A.escape_attempts = 0 and O.full_name = 'Dean Winchester';
+
+-- Find out who has more animals?
+SELECT count(*) as number_of_animals, O.full_name
+FROM animals A join owners O on A.owner_id = O.id
+group by O.full_name
+order by count(*) desc
+LIMIT 1;
+
+SELECT count(distinct A.id) as number_of_animals
+FROM animals A join visits V on A.id = V.animals_id
+WHERE V.vets_id = (SELECT id FROM vets WHERE name = 'Stephanie Mendez');
+
+SELECT V.id, V.name, V.age, V.date_of_graduation, s.name as specialization
+FROM vets V left join specializations SP on V.id = SP.vets_id 
+left join species S on SP.species_id = S.id;
+
+SELECT A.id, A.name, A.date_of_birth, A.escape_attempts, A.neutered, A.weight_kg 
+FROM animals A join visits V on A.id = V.animals_id
+WHERE V.vets_id = (SELECT id FROM vets WHERE name = 'Stephanie Mendez') 
+and V.date_of_visits between '2020-4-1' and '2020-8-30';
+
+SELECT A.id, A.name, A.date_of_birth, A.escape_attempts, A.neutered, A.weight_kg, count(*) as visits_number
+FROM animals A join visits V on A.id = V.animals_id
+group by A.id
+order by count(*) desc
+limit 1;
+
+SELECT A.id, A.name, A.date_of_birth, A.escape_attempts, A.neutered, A.weight_kg 
+FROM animals A join visits V on A.id = V.animals_id
+WHERE V.vets_id = (SELECT id FROM vets WHERE name = 'Maisy Smith')
+order by date_of_visits
+limit 1;
+
+SELECT A.name, A.date_of_birth, A.escape_attempts, A.neutered, A.weight_kg, 
+V.name, V.age, V.date_of_graduation, VI.date_of_visits 
+FROM animals A join visits VI on A.id = VI.animals_id 
+join vets V on VI.vets_id = V.id
+order by VI.date_of_visits desc
+limit 1;
