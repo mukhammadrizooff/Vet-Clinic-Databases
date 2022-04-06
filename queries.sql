@@ -51,29 +51,29 @@ SELECT neutered,SUM(escape_attempts) AS TOTAL_ESCAPE FROM ANIMALS GROUP BY neute
 SELECT species, MIN(weight_kg), MAX(weight_kg) FROM animals GROUP BY species;
 SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth >= '01-01-1990' AND date_of_birth < '12-31-2000' GROUP BY species;
 
--- What animals are included in the melody pool?
+-- What animals belong to Melody Pond?
 SELECT A.name, O.full_name as owner FROM animals A join owners O on  A.owner_id = O.id WHERE O.full_name = 'Melody Pond';
 
--- List of all animals that are Pokemon.
+-- List of all animals that are pokemon (their type is Pokemon).
 SELECT A.name, S.name  as species FROM animals A join species S  on A.species_id = S.id WHERE S.name = 'Pokemon' ;
 
--- List all the owners and their pets, be sure to include those who don't have any pets.
+-- List all owners and their animals, remember to include those that don't own any animal.
 SELECT O.full_name as owner_name, A.name as animal_name FROM owners O left join animals A on O.id= A.owner_id;
 
--- How many animals are there in each round?
+-- How many animals are there per species?
 SELECT count(*), S.name FROM animals A join species S on A.species_id = S.id group by S.name;
 
--- List all the Digimon that belong to Jennifer Orwell.
+-- List all Digimon owned by Jennifer Orwell.
 SELECT A.name as animal_name, S.name as species_name, O.full_name as owner_name
 FROM animals A join species S on A.species_id = S.id join owners O on A.owner_id = O.id
 WHERE S.name = 'Digimon' and O.full_name = 'Jennifer Orwell';
 
--- List all the animals that belong to Dean Winchester and did not try to escape.
+-- List all animals owned by Dean Winchester that haven't tried to escape.
 SELECT A.name as animal_name, A.escape_attempts, O.full_name as owner_name
 FROM animals A join owners O on A.owner_id = O.id
 WHERE A.escape_attempts = 0 and O.full_name = 'Dean Winchester';
 
--- Find out who has more animals?
+-- Who owns the most animals?
 SELECT count(*) as number_of_animals, O.full_name
 FROM animals A join owners O on A.owner_id = O.id
 group by O.full_name
