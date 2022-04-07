@@ -81,7 +81,7 @@ order by count(*) desc
 LIMIT 1;
 
 -- Who was the last animal seen by William Tatcher?
-SELECT a.name FROM ANIMALS AS a INNER JOIN visits AS j ON j.animals_id = a.id INNER JOIN vets AS v ON j.vets_id = v.id WHERE j.vets_id =1 AND j.date_of_visit = (SELECT MAX(date_of_visit) FROM visits WHERE vets_id = 1);
+SELECT A.name FROM ANIMALS AS a INNER JOIN visits AS j ON j.animals_id = a.id INNER JOIN vets AS v ON j.vets_id = v.id WHERE j.vets_id =1 AND j.date_of_visit = (SELECT MAX(date_of_visit) FROM visits WHERE vets_id = 1);
 
 -- How many different animals did Stephanie Mendez see?
 SELECT COUNT(j.animals_id) FROM visits AS j LEFT JOIN vets AS v ON v.id = j.vets_id WHERE v.id = 3;
@@ -90,16 +90,16 @@ SELECT COUNT(j.animals_id) FROM visits AS j LEFT JOIN vets AS v ON v.id = j.vets
 SELECT v.name, s.name FROM vets AS v FULL JOIN specialization AS j ON j.vets_id = v.id FULL JOIN species AS s ON s.id = j.species_id;
 
 -- List all animals that visited Stephanie Mendez between April 1st and August 30th, 2020.
-SELECT a.name FROM ANIMALS AS a INNER JOIN visits AS j On j.animals_id = a.id INNER JOIN vets AS v ON v.id = j.vets_id WHERE j.vets_id = 3 AND j.date_of_visit BETWEEN '04-01-2020' AND '08-30-2020';
+SELECT A.name FROM ANIMALS AS a INNER JOIN visits AS j On j.animals_id = a.id INNER JOIN vets AS v ON v.id = j.vets_id WHERE j.vets_id = 3 AND j.date_of_visit BETWEEN '04-01-2020' AND '08-30-2020';
 
 -- What animal has the most visits to vets
-SELECT COUNT(j.animals_id) AS number_of_visits, a.name FROM visits AS j FULL JOIN ANIMALS AS a ON a.id = j.animals_id GROUP BY a.name;
+SELECT COUNT(j.animals_id) AS number_of_visits, A.name FROM visits AS j FULL JOIN ANIMALS AS a ON a.id = j.animals_id GROUP BY A.name;
 
 -- Who was Maisy Smith's first visit?
-SELECT a.name, a.id FROM ANIMALS AS a INNER JOIN visits AS j ON j.animals_id = a.id INNER JOIN vets AS v ON j.vets_id = v.id WHERE j.vets_id =2 AND j.date_of_visit = (SELECT MIN(date_of_visit) FROM visits WHERE vets_id = 2);
+SELECT A.name, a.id FROM ANIMALS AS a INNER JOIN visits AS j ON j.animals_id = a.id INNER JOIN vets AS v ON j.vets_id = v.id WHERE j.vets_id =2 AND j.date_of_visit = (SELECT MIN(date_of_visit) FROM visits WHERE vets_id = 2);
 
 -- Details for most recent visit: animal information, vet information, and date of visit.
-SELECT a.name AS animal_name, a.date_of_birth AS pet_dob, a.escape_attempts AS escapeAttempts, a.weight_kg AS weight, a.neutered AS neutered, v.name AS vet_name, v.age AS vet_age, v.date_of_graduation AS vets_graduation_date, j.date_of_visit AS vet_visit_date FROM visits AS j FULL JOIN animals AS a ON a.id = j.animals_id FULL JOIN vets AS v ON v.id = j.vets_id ORDER BY vet_visit_date DESC;
+SELECT A.name AS animal_name, a.date_of_birth AS pet_dob, A.escape_attempts AS escapeAttempts, a.weight_kg AS weight, a.neutered AS neutered, v.name AS vet_name, v.age AS vet_age, v.date_of_graduation AS vets_graduation_date, j.date_of_visit AS vet_visit_date FROM visits AS j FULL JOIN animals AS a ON a.id = j.animals_id FULL JOIN vets AS v ON v.id = j.vets_id ORDER BY vet_visit_date DESC;
 
 -- How many visits were with a vet that did not specialize in that animal's species?
 SELECT COUNT(j.animals_id) FROM visits AS j INNER JOIN vets AS v ON v.id = j.vets_id WHERE v.id NOT IN (SELECT vets_id FROM specialization);
